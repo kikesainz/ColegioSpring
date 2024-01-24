@@ -1,56 +1,63 @@
-package com.kike.colegio.negocio.impl;
+package com.kike.colegio.dao.hibernateimpl;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.naming.NamingException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Component;
 
 import com.kike.colegio.dao.AlumnosDAO;
-import com.kike.colegio.dao.jdbcimpl.AlumnosDAOImplJdbc;
 import com.kike.colegio.dtos.AlumnoDTO;
-import com.kike.colegio.negocio.IAlumnosService;
+import com.kike.colegio.entities.AlumnoEntity;
+import com.kike.colegio.entities.MunicipioEntity;
+import com.kike.colegio.utils.DBUtils;
 
-@Component
-public class AlumnosService implements IAlumnosService{
-	
-	@Autowired
-	@Qualifier("HibernateImpl")
-	AlumnosDAO alumnosDAO;
+@Component("HibernateImpl")
+public class AlumnosDAOHibernate implements AlumnosDAO {
 
 	@Override
-	public List<AlumnoDTO> obtenerTodosAlummnos() throws ClassNotFoundException, SQLException, NamingException {
-		return alumnosDAO.obtenerTodosAlumnos();
+	public List<AlumnoDTO> obtenerTodosAlumnos() throws ClassNotFoundException, SQLException, NamingException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public List<AlumnoDTO> buscarAlumnos(String id, String nombre, String apellido, String activo, String famNumerosa)
 			throws ClassNotFoundException, SQLException, NamingException {
 		// TODO Auto-generated method stub
-		return alumnosDAO.buscarAlumnos(id, nombre, apellido, activo, famNumerosa);
+		return null;
 	}
 
 	@Override
 	public Integer insertarAlumno(String id, String nombre, String apellido, String activo, String famNumerosa,
 			String municipio) throws ClassNotFoundException, SQLException, NamingException {
-		// TODO Auto-generated method stub
-		return alumnosDAO.insertarAlumno(id, nombre, apellido, activo, famNumerosa, municipio);
+
+		AlumnoEntity alumnoEntity = new AlumnoEntity(Integer.parseInt(id), nombre,  apellido, 
+											new MunicipioEntity(Integer.parseInt(municipio)), 
+											Integer.parseInt(famNumerosa), Integer.parseInt (activo));
+		SessionFactory sessionFactory = DBUtils.creadorSessionFactory();
+		Session session = sessionFactory.getCurrentSession();
+		
+		session.beginTransaction();
+		Integer pk = (Integer) session.save(alumnoEntity);
+		session.getTransaction().commit();
+		return null;
 	}
 
 	@Override
 	public Integer actualizarAlumno(String id, String nombre, String apellido, String activo, String famNumerosa,
 			String municipio) throws ClassNotFoundException, SQLException, NamingException {
 		// TODO Auto-generated method stub
-		return  alumnosDAO.actualizarAlumno(id, nombre, apellido, activo, famNumerosa, municipio);
+		return null;
 	}
 
 	@Override
 	public Integer borrarAlumno(String id) throws ClassNotFoundException, SQLException, NamingException {
 		// TODO Auto-generated method stub
-		return alumnosDAO.borrarAlumno(id);
+		return null;
 	}
 
 }

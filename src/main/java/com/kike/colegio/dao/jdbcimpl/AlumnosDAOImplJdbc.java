@@ -18,7 +18,7 @@ import com.kike.colegio.dao.AlumnosDAO;
 import com.kike.colegio.dtos.AlumnoDTO;
 import com.kike.colegio.utils.DBUtils;
 
-@Component
+@Component("JDBCImpl")
 public class AlumnosDAOImplJdbc implements AlumnosDAO{
 	private static final Logger logger = LoggerFactory.getLogger(AlumnosDAOImplJdbc.class) ; 
 

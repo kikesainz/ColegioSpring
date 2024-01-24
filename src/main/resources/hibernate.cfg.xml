@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/colegio</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/colegio?serverTimezone=UTC</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">PracticaRoot</property>
         <property name="hibernate.connection.pool_size">1</property>
@@ -13,7 +13,12 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
-        <mapping resource="com.kike.colegio.entities.AlumnoEntity" />
-        <mapping resource="com.kike.colegio.entities.MunicipioEntity" />
+        <mapping class="com.kike.colegio.entities.AlumnoEntity"/>
+		<mapping class="com.kike.colegio.entities.MunicipiosEntity"/>
+		<mapping class="com.kike.colegio.entities.AsignaturaEntity"/>
+		<mapping class="com.kike.colegio.entities.MatriculacionEntity"/>
+		<mapping class="com.kike.colegio.entities.MatriculacionesID"/>
+		<mapping class="com.kike.colegio.entities.CajaEntity"/>
+		<mapping class="com.kike.colegio.entities.FaltasEntity"/>
     </session-factory>
 </hibernate-configuration>

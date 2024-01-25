@@ -1,4 +1,4 @@
-package com.kike.colegio.entities;
+ package com.kike.colegio.entities;
 
 import java.util.ArrayList;
 import java.util.List;

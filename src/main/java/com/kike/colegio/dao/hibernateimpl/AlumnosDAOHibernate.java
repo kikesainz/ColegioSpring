@@ -85,13 +85,44 @@ public class AlumnosDAOHibernate implements AlumnosDAO {
 	@Override
 	public Integer actualizarAlumno(String id, String nombre, String apellido, String activo, String famNumerosa,
 			String municipio) throws ClassNotFoundException, SQLException, NamingException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		SessionFactory factory = DBUtils.creadorSessionFactory();
+		Session s = factory.getCurrentSession();
+		s.beginTransaction();
+
+		MunicipiosEntity municipioEntity = s.find(MunicipiosEntity.class, Integer.parseInt(municipio));
+		
+//		MunicipiosEntity municipioEntity = new MunicipiosEntity(Integer.parseInt(municipio), null, null, null, null, null);
+
+		AlumnoEntity alumnoEntity = new AlumnoEntity(Integer.parseInt(id), 
+													nombre, apellido, Integer.parseInt(famNumerosa), 
+													Integer.parseInt(activo), municipioEntity);
+		s.merge(alumnoEntity);
+
+		s.getTransaction().commit();
+
+		s.close();
+		Integer idPk = alumnoEntity.getId();
+		return idPk;
 	}
+	
 
 	@Override
 	public Integer borrarAlumno(String id) throws ClassNotFoundException, SQLException, NamingException {
-		// TODO Auto-generated method stub
+		
+		SessionFactory factory = DBUtils.creadorSessionFactory();
+		Session s = factory.getCurrentSession();
+		s.beginTransaction();
+		
+		AlumnoEntity alumnoEntity = s.find(AlumnoEntity.class, Integer.parseInt(id));
+		
+		alumnoEntity.setActivo(0);
+		
+		s.merge(alumnoEntity);
+		
+		s.getTransaction().commit();
+
+		s.close();
 		return null;
 	}
 

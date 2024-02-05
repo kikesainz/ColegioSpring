@@ -13,14 +13,15 @@ import com.kike.colegio.dtos.AlumnoDTO;
 import com.kike.colegio.entities.AlumnoEntity;
 import com.kike.colegio.entities.MunicipiosEntity;
 import com.kike.colegio.repositories.AlumnosRepository;
-import com.kike.colegio.repositories.MunicipiosRepository;
+import com.kike.colegio.repositories.MunicipioRepository;
+
 
 
 @Component("SpringDataJPAImpl")
 public class AlumnosDAOSpringDataJPA implements AlumnosDAO{
 
 	@Autowired
-	MunicipiosRepository municipiosRepository;
+	MunicipioRepository municipioRepository;
 	
 	@Autowired
 	AlumnosRepository alumnosRepository;
@@ -34,16 +35,16 @@ public class AlumnosDAOSpringDataJPA implements AlumnosDAO{
 	@Override
 	public List<AlumnoDTO> buscarAlumnos(String id, String nombre, String apellido, String activo, String famNumerosa)
 			throws ClassNotFoundException, SQLException, NamingException {
-//		TODO: implementación de búsqueda de alumnos
-//		alumnosRepository.buscaAlumnoporIDyNombre(null, nombre, apellido, null, null)
-		return null;
+
+	return	alumnosRepository.buscaAlumnoporIDyNombre(Integer.parseInt(id), nombre, apellido, Integer.parseInt(activo), Integer.parseInt(famNumerosa));
+		
 	}
 
 	@Override
 	public Integer insertarAlumno(String id, String nombre, String apellido, String activo, String famNumerosa,
 			String municipio) throws ClassNotFoundException, SQLException, NamingException {
 		
-		MunicipiosEntity  municipioEntity = municipiosRepository.findById(Integer.parseInt(municipio)).get();
+		MunicipiosEntity  municipioEntity = municipioRepository.findById(Integer.parseInt(municipio)).get();
 		AlumnoEntity alumnoEntity = new AlumnoEntity(Integer.parseInt(id), nombre, apellido, Integer.parseInt(famNumerosa), Integer.parseInt(activo),municipioEntity);
 		alumnosRepository.save(alumnoEntity);
 		return alumnoEntity.getId();
@@ -52,7 +53,7 @@ public class AlumnosDAOSpringDataJPA implements AlumnosDAO{
 	@Override
 	public Integer actualizarAlumno(String id, String nombre, String apellido, String activo, String famNumerosa,
 			String municipio) throws ClassNotFoundException, SQLException, NamingException {
-		MunicipiosEntity  municipioEntity = municipiosRepository.findById(Integer.parseInt(municipio)).get();
+		MunicipiosEntity  municipioEntity = municipioRepository.findById(Integer.parseInt(municipio)).get();
 		AlumnoEntity alumnoEntity = new AlumnoEntity(Integer.parseInt(id), nombre, apellido, Integer.parseInt(famNumerosa), Integer.parseInt(activo),municipioEntity);
 		alumnosRepository.save(alumnoEntity);
 		return alumnoEntity.getId();

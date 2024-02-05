@@ -16,7 +16,7 @@ import com.kike.colegio.entities.AlumnoEntity;
 public interface AlumnosRepository extends CrudRepository<AlumnoEntity,Integer>{
 	@Query(value = "select new com.kike.colegio.dtos.AlumnoDTO (a.id,a.nombre,a.apellidos,a.municipio.nombre,a.municipio.idMunicipio,a.famNumerosa,a.activo) "
 			+ "FROM com.kike.colegio.entities.AlumnoEntity a "
-			+ "WHERE (a.id LIKE CONCAT('%',:id,'%') or :id is null) "
+			+ "WHERE CAST (a.id AS STRING)  LIKE CONCAT ('%',:id,'%')  "
 			+ "AND a.nombre LIKE CONCAT ('%',:nombre,'%') "
 			+ "AND a.apellidos LIKE CONCAT ('%',:apellidos,'%') "
 			+ "AND a.activo = :activo "

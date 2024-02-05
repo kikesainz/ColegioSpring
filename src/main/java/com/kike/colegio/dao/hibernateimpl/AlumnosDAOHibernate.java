@@ -31,45 +31,39 @@ public class AlumnosDAOHibernate implements AlumnosDAO {
 	@Override
 	public List<AlumnoDTO> buscarAlumnos(String id, String nombre, String apellido, String activo, String famNumerosa)
 			throws ClassNotFoundException, SQLException, NamingException {
-		String jpql = " select new com.kike.colegio.dtos.AlumnoDTO (a.id,a.nombre,a.apellidos,m.nombre,m.idMunicipio,a.famNumerosa,a.activo) "
-				+ "FROM AlumnoEntity a, MunicipiosEntity m " 
-				+ "WHERE a.municipio.idMunicipio = m.idMunicipio "
-				+ "AND CAST(a.id AS string) LIKE :id " 
-				+ " AND a.nombre LIKE :nombre "
-				+ "AND a.apellidos LIKE :apellido " 
-				+ "AND a.activo = :activo "
-				+ "AND a.famNumerosa = :familiaNumerosa";
 
-		SessionFactory factory = DBUtils.creadorSessionFactory();
-		Session s = factory.getCurrentSession();
-		s.beginTransaction();
-
-		Query<AlumnoDTO> query = s.createQuery(jpql, AlumnoDTO.class).setParameter("id", "%" + id)
-				.setParameter("nombre", "%" + nombre + "%").setParameter("apellido", "%" + apellido + "%")
-				.setParameter("activo", activo).setParameter("familiaNumerosa", famNumerosa);
-
-		List<AlumnoDTO> lista = query.getResultList();
-
-		s.close();
-
-		return lista;
+		String jpql = " SELECT new com.kike.colegio.dtos.AlumnoDTO (a.id, a.nombre, a.apellidos, m.nombre, m.idMunicipio, a.famNumerosa, a.activo)"
+						+ " FROM AlumnoEntity a, "
+						+ " MunicipiosEntity m "
+						+ " WHERE a.municipio.idMunicipio = m.idMunicipio "
+						+ "	AND CAST (a.id AS string) LIKE :id "
+						+ " AND a.nombre LIKE :nombre "
+						+ " AND a.apellidos LIKE :apellido "
+						+ " AND a.activo = :activo "
+						+ " AND a.famNumerosa = :familiaNumerosa ";
 		
+		SessionFactory sessionFactory = DBUtils.creadorSessionFactory();
+		Session s = sessionFactory.getCurrentSession();
+		
+		s.beginTransaction();
+		
+		Query<AlumnoDTO> query = s.createQuery(jpql, AlumnoDTO.class).setParameter("id", "%" + id + "%")
+									.setParameter("nombre", "%" + nombre + "%")
+									.setParameter("apellido", "%" + apellido + "%")
+									.setParameter("activo", activo)
+									.setParameter("familiaNumerosa", famNumerosa);
+		
+		List<AlumnoDTO> listaAlumnos= query.getResultList();
+		
+		s.close();
+		return listaAlumnos;
+
 	}
 
 	@Override
 	public Integer insertarAlumno(String id, String nombre, String apellido, String activo, String famNumerosa,
 			String municipio) throws ClassNotFoundException, SQLException, NamingException {
 
-//		AlumnoEntity alumnoEntity = new AlumnoEntity(Integer.parseInt(id), nombre,  apellido, 
-//											new MunicipioEntity(Integer.parseInt(municipio)), 
-//											Integer.parseInt(famNumerosa), Integer.parseInt (activo));
-//		SessionFactory sessionFactory = DBUtils.creadorSessionFactory();
-//		Session session = sessionFactory.getCurrentSession();
-//		
-//		session.beginTransaction();
-//		Integer pk = (Integer) session.save(alumnoEntity);
-//		session.getTransaction().commit();
-		
 		SessionFactory factory = DBUtils.creadorSessionFactory();
 		Session s = factory.getCurrentSession();
 		s.beginTransaction();
@@ -78,7 +72,9 @@ public class AlumnosDAOHibernate implements AlumnosDAO {
 		
 //		MunicipiosEntity municipioEntity = new MunicipiosEntity(Integer.parseInt(municipio), null, null, null, null, null);
 
-		AlumnoEntity alumnoEntity = new AlumnoEntity(Integer.parseInt(id), nombre, apellido, Integer.parseInt(famNumerosa), Integer.parseInt(activo), municipioEntity);
+		AlumnoEntity alumnoEntity = new AlumnoEntity(Integer.parseInt(id), 
+													nombre, apellido, Integer.parseInt(famNumerosa), 
+													Integer.parseInt(activo), municipioEntity);
 		s.persist(alumnoEntity);
 
 		s.getTransaction().commit();
@@ -91,11 +87,19 @@ public class AlumnosDAOHibernate implements AlumnosDAO {
 	@Override
 	public Integer actualizarAlumno(String id, String nombre, String apellido, String activo, String famNumerosa,
 			String municipio) throws ClassNotFoundException, SQLException, NamingException {
+
 		SessionFactory factory = DBUtils.creadorSessionFactory();
 		Session s = factory.getCurrentSession();
 		s.beginTransaction();
 
-		AlumnoEntity alumnoEntity = new AlumnoEntity(Integer.parseInt(id), nombre, apellido, Integer.parseInt(famNumerosa), Integer.parseInt(activo), s.find(MunicipiosEntity.class, Integer.parseInt(municipio)));
+
+		MunicipiosEntity municipioEntity = s.find(MunicipiosEntity.class, Integer.parseInt(municipio));
+		
+//		MunicipiosEntity municipioEntity = new MunicipiosEntity(Integer.parseInt(municipio), null, null, null, null, null);
+
+		AlumnoEntity alumnoEntity = new AlumnoEntity(Integer.parseInt(id), 
+													nombre, apellido, Integer.parseInt(famNumerosa), 
+													Integer.parseInt(activo), municipioEntity);
 
 		s.merge(alumnoEntity);
 
@@ -104,11 +108,26 @@ public class AlumnosDAOHibernate implements AlumnosDAO {
 		s.close();
 
 		return alumnoEntity.getId();
+
 	}
+	
 
 	@Override
 	public Integer borrarAlumno(String id) throws ClassNotFoundException, SQLException, NamingException {
-		// TODO Auto-generated method stub
+		
+		SessionFactory factory = DBUtils.creadorSessionFactory();
+		Session s = factory.getCurrentSession();
+		s.beginTransaction();
+		
+		AlumnoEntity alumnoEntity = s.find(AlumnoEntity.class, Integer.parseInt(id));
+		
+		alumnoEntity.setActivo(0);
+		
+		s.merge(alumnoEntity);
+		
+		s.getTransaction().commit();
+
+		s.close();
 		return null;
 	}
 
